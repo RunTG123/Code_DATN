@@ -1,0 +1,383 @@
+// Test  9.10V
+// Ngay 27/12/2023
+
+
+int boot = 0;
+const int Enable_L =5;
+const int HighL = 6;
+const int LowL = 7;
+
+const int Enable_R = 10;
+const int HighR = 8;
+const int LowR = 9;
+
+
+const int D0 = 3; // Connect Raspberry pin 21
+const int D1 = 4; // Connect Raspberry pin 22
+const int D2 = 11; // Connect Raspberry pin 23
+const int D3 = 12; // Connect Raspberry pin 24
+
+const int led = 13; 
+ 
+
+int a, b, c, d, data;
+
+void setup() {
+    pinMode(Enable_L, OUTPUT);
+    pinMode(HighL, OUTPUT);
+    pinMode(LowL, OUTPUT);
+
+    pinMode(Enable_R, OUTPUT);
+    pinMode(HighR, OUTPUT);
+    pinMode(LowR, OUTPUT);
+
+    pinMode(led , OUTPUT);
+
+    pinMode(D0, INPUT_PULLUP);
+    pinMode(D1, INPUT_PULLUP);
+    pinMode(D2, INPUT_PULLUP);
+    pinMode(D3, INPUT_PULLUP);
+
+    Serial.begin(9600);
+
+}
+
+
+void get_Data() {
+    a = digitalRead(D0);
+    b = digitalRead(D1);
+    c = digitalRead(D2);
+    d = digitalRead(D3);
+
+    data = 8*d +4*c + 2*b + 1*a;
+}
+
+
+void Boot()
+{
+    digitalWrite(HighL, HIGH);
+    digitalWrite(LowL, LOW);
+    analogWrite(Enable_L, 125); //  110
+
+    digitalWrite(HighR, HIGH);
+    digitalWrite(LowR, LOW);
+    analogWrite(Enable_R, 125); // 110
+    
+    delay(300); // 300
+
+    digitalWrite(HighL, HIGH);
+    digitalWrite(LowL, LOW);
+    analogWrite(Enable_L, 55); //  110
+
+    digitalWrite(HighR, HIGH);
+    digitalWrite(LowR, LOW);
+    analogWrite(Enable_R, 55); // 110
+    
+    delay(400); // 300
+}
+
+void Boot2()
+{
+    digitalWrite(HighL, HIGH);
+    digitalWrite(LowL, LOW);
+    analogWrite(Enable_L, 125); //  105
+
+    digitalWrite(HighR, HIGH);
+    digitalWrite(LowR, LOW);
+    analogWrite(Enable_R, 125); // 105
+    
+    delay(400);
+    
+    digitalWrite(HighL, HIGH);
+    digitalWrite(LowL, LOW);
+    analogWrite(Enable_L, 60); //  90
+
+    digitalWrite(HighR, HIGH);
+    digitalWrite(LowR, LOW);
+    analogWrite(Enable_R, 60); // 90
+    
+    delay(300);
+}
+
+void Di_Len() {
+    digitalWrite(HighL, HIGH);
+    digitalWrite(LowL, LOW);
+    analogWrite(Enable_L, 73); // 70 73
+
+    digitalWrite(HighR, HIGH);
+    digitalWrite(LowR, LOW);
+    analogWrite(Enable_R,73); // 70 73
+}
+
+void Di_Xuong() {
+    digitalWrite(HighL, LOW);
+    digitalWrite(LowL, HIGH);
+    analogWrite(Enable_L, 100); // 170
+
+    digitalWrite(HighR, LOW);
+    digitalWrite(LowR, HIGH);
+    analogWrite(Enable_R, 100); // 170
+}
+
+void Dung_Lai() {
+    digitalWrite(HighL, LOW);
+    digitalWrite(LowL, LOW);
+
+    digitalWrite(HighR, LOW);
+    digitalWrite(LowR, LOW);
+}
+
+
+// 160 - 90
+void Re_Trai_1() {  // Rẻ trái mức 1
+    digitalWrite(HighL, HIGH);
+    digitalWrite(LowL, LOW);
+    analogWrite(Enable_L,70); // 30
+
+    digitalWrite(HighR, HIGH);
+    digitalWrite(LowR, LOW);
+    analogWrite(Enable_R,110); // 130 - 100
+}
+
+void Re_Trai_2() { // Rẻ trái mức 2
+    digitalWrite(HighL,LOW);
+    digitalWrite(LowL, HIGH);
+    analogWrite(Enable_L, 23); // 29
+
+    digitalWrite(HighR, HIGH);
+    digitalWrite(LowR, LOW);
+    analogWrite(Enable_R,140); // 150 153
+}
+
+void Re_Trai_3() { // Rẻ trái mức 3
+    digitalWrite(HighL, LOW);
+    digitalWrite(LowL, HIGH);
+    analogWrite(Enable_L,23); // 29
+
+    digitalWrite(HighR, HIGH);
+    digitalWrite(LowR, LOW);
+    analogWrite(Enable_R, 140); // 150 153
+}
+
+
+void Re_Phai_1() { // Re_Phai Muc 1
+    digitalWrite(HighL, HIGH);
+    digitalWrite(LowL, LOW);
+    analogWrite(Enable_L, 136); //  130
+
+    digitalWrite(HighR, HIGH);
+    digitalWrite(LowR, LOW);
+    analogWrite(Enable_R, 66); // 30
+}
+
+void Re_Phai_2(){ // Re Phai Muc 2  - Pin Full ( 153 - 22) - Pin ( 158"160" - 22)
+    digitalWrite(HighL, HIGH);
+    digitalWrite(LowL, LOW);
+    analogWrite(Enable_L,155); // 155 158 160 153
+
+    digitalWrite(HighR, LOW);
+    digitalWrite(LowR, HIGH);
+    analogWrite(Enable_R,23); // 23
+}
+
+void Re_Phai_3() // Re Phai Muc 3
+{
+    digitalWrite(HighL, HIGH);
+    digitalWrite(LowL, LOW);
+    analogWrite(Enable_L, 155); // 173
+
+    digitalWrite(HighR,LOW);   // LOWw
+    digitalWrite(LowR, HIGH); // HIGH 
+    analogWrite(Enable_R,23); //   23
+}
+
+
+
+void Signal_Stop()
+{
+    Dung_Lai();
+    delay(3000);
+}
+
+void Traffic_Light()
+{
+  Dung_Lai();
+  delay(1000);
+}
+
+void LaneEnd()
+{
+    // DUng_Lai
+    digitalWrite(HighL, LOW);
+    digitalWrite(LowL, LOW);
+
+    digitalWrite(HighR, LOW);
+    digitalWrite(LowR, LOW);
+    delay(2000);
+
+
+    // Re PHAI 1
+    digitalWrite(HighR, HIGH);
+    digitalWrite(LowR, LOW);
+    analogWrite(Enable_R, 225); // 230
+
+    digitalWrite(HighL, LOW);
+    digitalWrite(LowL, HIGH);
+    analogWrite(Enable_L, 50); // 50
+    delay(820); // 850
+
+    // DUng_Lai
+    digitalWrite(HighL, LOW);
+    digitalWrite(LowL, LOW);
+
+    digitalWrite(HighR, LOW);
+    digitalWrite(LowR, LOW);
+    delay(1500);
+    
+    // Re Phai 2
+    digitalWrite(HighR, HIGH);
+    digitalWrite(LowR, LOW);
+    analogWrite(Enable_R, 225); // 235
+
+    digitalWrite(HighL, LOW);
+    digitalWrite(LowL, HIGH);
+    analogWrite(Enable_L, 50); // 30 50
+    delay(660); // 740 - 700
+
+//    // DUng_Lai
+    digitalWrite(HighL, LOW);
+    digitalWrite(LowL, LOW);
+
+    digitalWrite(HighR, LOW);
+    digitalWrite(LowR, LOW);
+    delay(500);
+}
+
+void waitStart()
+{
+  //digitalWrite(led,HIGH);
+  Dung_Lai();
+  delay(2000);
+  //digitalWrite(led,LOW);
+  boot = 0;
+}
+
+// Hàm nhận Result từ Qt
+
+String data_s;
+String data_s2;
+int result , result2;
+
+void get_Result_Qt()
+{
+   if (Serial.available() > 0) 
+   { 
+        // Kiểm tra xem có dữ liệu từ cổng serial không
+         data_s = Serial.readStringUntil('\n'); // Đọc dữ liệu cho đến khi gặp ký tự xuống dòng
+         data_s.trim(); // Loại bỏ các khoảng trắng ở đầu và cuối chuỗi
+         result = data_s.toInt();  
+         //Serial.println(data_s);  
+    }
+}
+
+String result_serial;
+String Distance_String;
+
+int while_R_Check;
+int while_L_Check;
+
+void loop()
+{
+    get_Data();
+    if(data == 0)
+    {
+       if(boot == 0)
+        {
+            Boot();
+            boot += 1;
+        }
+        else
+        {
+            Di_Len();
+        }
+    }
+    else if (data == 1)
+    {
+       Re_Phai_1();
+    }
+    else if(data == 2)
+    {
+      while_R_Check = 1;
+       while(while_R_Check && data != 15)
+       {
+        get_Data();
+        if(data == 0)
+        {
+          while_R_Check = 0;
+          break;
+        }
+        Re_Phai_2();
+       }
+    }
+    else if(data == 3)
+    {
+       Re_Phai_3();
+    }
+    else if(data == 4)
+    {
+      Re_Trai_1();
+    }
+    else if(data == 5)
+    {
+       while_L_Check = 1;
+       while(while_L_Check && data != 15)
+       {
+        Re_Trai_2();
+        get_Data();
+        if(data == 0)
+        {
+          while_L_Check = 0;
+          break;
+        }
+       }
+    }
+    else if(data == 6)
+    {
+      Re_Trai_3();
+    }
+    else if(data == 7)
+    {
+       Signal_Stop();
+       boot = 0;
+    }
+    else if(data == 9)
+    {
+       waitStart();
+       boot = 0;
+
+    }
+    else if(data == 10)
+    {
+       Traffic_Light();
+       boot = 0;
+
+    }
+    else if(data == 8)
+    {
+       Dung_Lai();
+       delay(2000);
+       LaneEnd();
+       Dung_Lai();
+       delay(1000);
+       get_Data();
+       Boot2();
+    }
+    else if (data == 15)
+    {
+       Dung_Lai();
+       boot = 0;
+       while_L_Check = 0;
+       while_R_Check = 0;
+       
+    }
+}
